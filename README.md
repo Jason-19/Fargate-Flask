@@ -36,3 +36,17 @@ sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 
 ```
+#Port Forwarding (Recomendado para RDS/Aurora)
+``El comando tiene que ser todo en una sola linea``
+``verificar el puerto local de mi maquina si esta ocupado (ojo)``
+```bash
+aws ssm start-session --target i-02ebe5b97d6f466c2 
+--document-name AWS-StartPortForwardingSessionToRemoteHost 
+--parameters '{"portNumber":["3306"],"host":["database-1-instance-1.c4t864a8kdls.us-east-1.rds.amazonaws.com"] ,"localPortNumber":["8400"]}' 
+--region us-east-1
+```
+* target es el id de la instancia
+* portNumber es el puerto a exponer
+* host es el host de la base de datos
+* localPortNumber es el puerto local de mi maquina
+* region es la region de la base de datos
