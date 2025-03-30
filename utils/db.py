@@ -6,6 +6,7 @@ Se cobra por número de secretos almacenados y solicitudes de recuperación,
 from http.client import HTTPException
 import json
 import boto3
+from botocore.exceptions import ClientError
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -13,7 +14,7 @@ import logging
 log = logging.getLogger(__name__)
 
 def getSecretManagerDB():
-    secret_name = "MySecretForAppGamerVault"  
+    secret_name = "rds!cluster-9b4b7cd8-22ee-48ff-bbc4-d1f43ddf3bc8"
     region_name = "us-east-1"   
     
     try:
@@ -21,24 +22,17 @@ def getSecretManagerDB():
         response = client.get_secret_value(SecretId=secret_name)
         secret = json.loads(response["SecretString"])
         return secret
-    except Exception as e:
+    except ClientError as e:
         log.error(f"Error{e}")
         return None
     
 
-# db_credentials = getSecretManagerDB()
-
-# DB_HOST = db_credentials["host"]
-# DB_NAME = db_credentials["dbname"]
-# DB_USER = db_credentials["username"]
-# DB_PASS = db_credentials["password"]
-
-# local databse
-DB_HOST = '54.236.55.159'
-# DB_HOST = 'database_GamerVault'
+db_credentials = getSecretManagerDB()
+DB_HOST = "cluster-gamer-vault-instance-1.c6r6ws4k4vwo.us-east-1.rds.amazonaws.com"
 DB_NAME = 'gamervaultlts'
-DB_USER = 'root'
-DB_PASS = 'root'
+DB_USER = db_credentials["username"]
+DB_PASS = db_credentials["password"]
+
 
 DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 engine = create_engine(DATABASE_URL)
