@@ -29,3 +29,10 @@ docker-compose up -d --scale api=2
 * Cuando la nueva instancia está lista, elimina la anterior.
 
 * Útil en entornos productivos donde no puedes permitir caída del servicio.
+
+# install docker compose 
+```bash
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+```
