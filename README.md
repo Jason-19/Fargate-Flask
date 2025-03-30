@@ -50,3 +50,10 @@ aws ssm start-session --target i-02ebe5b97d6f466c2
 * host es el host de la base de datos
 * localPortNumber es el puerto local de mi maquina
 * region es la region de la base de datos
+Si estas en windows instala el plugin para el session manager
+https://s3.amazonaws.com/session-manager-downloads/plugin/latest/windows/SessionManagerPluginSetup.exe
+
+Salida exitosa
+`` Starting session with SessionId: jnunez@bgeneral.com-gb8f8qtf92l446u7zqsc58raty ``
+``Port 8400 opened for sessionId jnunez@bgeneral.com-gb8f8qtf92l446u7zqsc58raty. ``
+``Waiting for connections... ``
