@@ -34,7 +34,7 @@ def getSecretManagerDB():
 # DB_PASS = db_credentials["password"]
 
 # local databse
-DB_HOST = 'localhost'
+DB_HOST = '54.236.55.159'
 # DB_HOST = 'database_GamerVault'
 DB_NAME = 'gamervaultlts'
 DB_USER = 'root'
