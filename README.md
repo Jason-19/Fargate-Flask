@@ -36,9 +36,10 @@ sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 
 ```
-#Port Forwarding (Recomendado para RDS/Aurora)
+# Port Forwarding (Recomendado para RDS/Aurora)
 ``El comando tiene que ser todo en una sola linea``
 ``verificar el puerto local de mi maquina si esta ocupado (ojo)``
+
 ```bash
 aws ssm start-session --target i-02ebe5b97d6f466c2 
 --document-name AWS-StartPortForwardingSessionToRemoteHost 
@@ -51,7 +52,7 @@ aws ssm start-session --target i-02ebe5b97d6f466c2
 * localPortNumber es el puerto local de mi maquina
 * region es la region de la base de datos
 Si estas en windows instala el plugin para el session manager
-https://s3.amazonaws.com/session-manager-downloads/plugin/latest/windows/SessionManagerPluginSetup.exe
+```bash https://s3.amazonaws.com/session-manager-downloads/plugin/latest/windows/SessionManagerPluginSetup.exe ```
 
 Salida exitosa
 `` Starting session with SessionId: jnunez@bgeneral.com-gb8f8qtf92l446u7zqsc58raty ``

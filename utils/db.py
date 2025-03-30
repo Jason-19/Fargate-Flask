@@ -7,7 +7,7 @@ from http.client import HTTPException
 import json
 import boto3
 from botocore.exceptions import ClientError
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import logging
@@ -55,7 +55,7 @@ def get_db():
 def verify_db_connection():
     try:
         with engine.connect() as conn:
-            conn.execute("SHOW DATABASES")
+            conn.execute(text("show databases;"))
         log.info("Conexion exitosa")
         return True
     except Exception as e:
