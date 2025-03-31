@@ -1,39 +1,52 @@
 
 # Aqui construimos la image de la API 
 ```bash
-docker build -t gamer-gault-lts:1.0 .
+docker build -t api-flask-fargate-gamer-vault .
 ```
 # Para Desarrolo local 
 ```bash
 
-docker run -d -p 5000:5000 --name gamer-vault-lts-container gamer-vault-lts:1.0
+docker run -d -p 5000:5000 --name gamer-vault-lts-container gamer-vault
 
 ```
 * Nombre del contenedor **gamer-vault-lts-container**
-* Imagen que contruimos **gamer-vault-lts**
+* Imagen que contruimos **gamer-vault**
 
 # Create repository en AWS Fargate
 
 ```bash
-
 aws ecr create-repository --repository-name  api-flask-fargate-gamer-vault 
+```
 
+## Nos logueamos en AWS ECR 
+Dirijete a la pestaña de ECR, ingresa al repositorio y haz clic sobre View push commands 
+y copia el comando #1 en tu instancia de ec2. 
+Este se encargará de hacer un login en el registry.
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 862695242185.dkr.ecr.us-east-1.amazonaws.com
 ```
-#  Zero Downtime con
-```bash 
-docker-compose up -d --scale api=2
+Salida 
+``Login Succeeded``
+
+## Subir la imagen a ECR etiqueta la imagen con el tag
+```bash
+docker tag api-flask-fargate-gamer-vault:latest 862695242185.dkr.ecr.us-east-1.amazonaws.com/api-flask-fargate-gamer-vault:latest
+docker push 862695242185.dkr.ecr.us-east-1.amazonaws.com/api-flask-fargate-gamer-vault:latest
 ```
+
+##  Zero Downtime con
+```bash docker-compose up -d --scale api=2```
 
 * Mantiene una instancia activa mientras la otra se reinicia.
-
 * Cuando la nueva instancia está lista, elimina la anterior.
-
 * Útil en entornos productivos donde no puedes permitir caída del servicio.
+
 
 # install docker compose 
 ```bash
 sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+
 
 ```
 # Port Forwarding (Recomendado para RDS/Aurora)
