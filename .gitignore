@@ -153,3 +153,4 @@ procedure.sql
 test.py
 .venv/
 __pycache__/
+.vscode/

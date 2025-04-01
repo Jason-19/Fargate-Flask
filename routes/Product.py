@@ -6,19 +6,12 @@ product_route = Blueprint('product',__name__)
 
 class ProductsController():
     
-    def get_products(db:Session, limit:int, category:str):
-        if category is None:
-            product = db.query(Product).limit(limit).all()
-        else:
-            product = db.query(Product).join(Category).filter(Category.name == category).limit(limit).all()
-                
+    def get_products(db:Session, limit:int, last_product = None):
+        
+        if last_product is None:
+            return jsonify({ "Error":"parameter last_id is requered"}),404
+        product = db.query(Product).filter(Product.id_product > last_product).limit(limit).all()
         return jsonify([product.serialize() for product in product]),200
-    
-    # def get_pagineted_products(db:Session,limit:int, last:str = None):
-    #     query = db.query(Product).order_by(Product.id_product.asc())
-    #     if last:
-    #         query = query.filter(Product.id_product > last)
-    #     return query.limit(limit).all()
         
     
     def getProductById(db:Session,id_product):
