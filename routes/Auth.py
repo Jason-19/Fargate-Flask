@@ -12,7 +12,9 @@ def login():
     username = data.get('username')
     password = data.get('password')
     user = db.query(User).filter_by(username= username).first()
-    print(user.password_hash)
+    
+    if not user:
+        return jsonify({"message": "Unregistered User"}), 401
     validate = sc.verify_password(password,user.password_hash)
     
     if not validate or user.username != username:
