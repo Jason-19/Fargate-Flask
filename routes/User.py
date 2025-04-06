@@ -2,7 +2,7 @@
 from . import *
 from models.UserModel import User, Order
 
-user_route = Blueprint('user',__name__) 
+user_route = Blueprint('users',__name__) 
 
 class UsersController():
     def get_user(db:Session):
@@ -18,25 +18,25 @@ class UsersController():
         return db_user
 
 
-@user_route.route("/user/all",methods=['GET'])
+@user_route.route("/users/all",methods=['GET'])
 def getuser():
     user= db.query(User).all()
     user_list = [user.serialize() for user in user]
     return jsonify(user_list), 200
 
-@user_route.route("/user/<id_user>/",methods=['GET'])
+@user_route.route("/users/<id_user>/",methods=['GET'])
 def getuserById(id_user):
     user= db.query(User).where(User.id_user == id_user).first()
     return jsonify(user.serialize()), 200
 
 
-@user_route.route("/user/order/<id_user>",methods=['POST'])
+@user_route.route("/users/order/<id_user>",methods=['POST'])
 def getuserOrderById(id_user):
     orderUser= db.query(Order).where(User.id_user == id_user).all()
     user_list = [user.serialize() for user in orderUser]
     return jsonify(user_list), 200
 
-@user_route.route("/user",methods=['POST'])
+@user_route.route("/users",methods=['POST'])
 def createuser():
     data = request.json
     user = UsersController.create_user(db,data)

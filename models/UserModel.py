@@ -20,6 +20,7 @@ class User(Base):
         'last_name': self.last_name,
         'username': self.username,
         'email': self.email,
+        "password_hash": self.password_hash,
         'phone': self.phone,
         'birth_date': self.birth_date,
         'created_at': self.created_at,
@@ -53,7 +54,7 @@ class Order(Base):
     __tablename__ = 'orders'
     
     id_order = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    id_user = Column(String(36), ForeignKey('users.id_user'))
+    id_user = Column(String(36), ForeignKey('users.user_id'))
     id_payment = Column(String(36), ForeignKey('payment_methods.id_payment'))
     total = Column(Numeric(10, 2), nullable=False)
     savings = Column(Numeric(10, 2), nullable=False)
