@@ -11,7 +11,7 @@ class Product(Base):
     image_url = Column(String(255))
     created_at = Column(TIMESTAMP, default=func.current_timestamp())
     
-    id_category = Column(String(36), ForeignKey('categories.id_category'))
+    id_category = Column(String(36), ForeignKey('categories.category_id'))
     category = relationship('Category', backref='products')
     
     def serialize(self):
@@ -29,13 +29,13 @@ class Product(Base):
 class Category(Base):
     __tablename__ = 'categories'
     
-    id_category = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    category_id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(255), nullable=False, unique=True)
     description = Column(JSON)
     
     def serialize(self):
         return {
-            'id_category': self.id_category,
+            'category_id': self.category_id,
             'name': self.name,
             'description': self.description
         }

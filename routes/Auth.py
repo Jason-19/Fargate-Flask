@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from . import *
 from models.UserModel import User
 import jwt
@@ -30,19 +31,29 @@ def register():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
     
-    print(data)
-
-    required = ['username', 'birthdate', 'email', 'password', 'confirm_password', 'terms_accepted']
+    # confirm_password', 'terms_accepted'
+    required = ['username', 'birth_date', 'email', 'password_hash']
     
     for field in required:
         if field not in data or not data[field]:
             return jsonify({'error': f'{field} required'}), 400
         
-    if data['password'] != data['confirm_password']:
-        return jsonify({'error': 'Passwords do not match'}), 400
+    # if data['password'] != data['confirm_password']:
+    #     return jsonify({'error': 'Passwords do not match'}), 400
     
-    if not data['terms_accepted']:
-        return jsonify({'error': 'You must accept the terms and conditions'}), 400
+    # if not data['terms_accepted']:
+    #     return jsonify({'error': 'You must accept the terms and conditions'}), 400
+    
+    # mayor 18 mvp
+    today = date.today()
+    age = today.year - datetime.strptime(data['birth_date'], '%Y-%m-%d').year
+    
+    if age < 18:
+        return jsonify({'error': 'You must be at least 18 years old'}), 400 
+    
+    #  validar el hasheo de la contraseña (nvp)
+    password_hash = sc.hash_password(data['password_hash'])
+    data['password_hash'] = password_hash
     
     try:
         #usuario o email ya existe en la bd
@@ -52,7 +63,13 @@ def register():
         if db.query(User).filter_by(email=data['email']).first():
             return jsonify({'error': 'The email is already registered'}), 400
         
+        user = User(**data)
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        
     except Exception as e:
+        db.roolback()
         return jsonify({'error': str(e)}), 500
     
     return jsonify({'message': 'Registered successfully'}), 201

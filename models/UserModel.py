@@ -2,33 +2,30 @@ from . import *
 
 class User(Base):
     __tablename__ = "users"
-    
-    id_user = Column(Integer, primary_key=True)
-    first_name = Column(String(255))
-    last_name = Column(String(255))
-    username = Column(String(255), unique=True, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    phone = Column(String(20))
-    created_at = Column(TIMESTAMP, default="CURRENT_TIMESTAMP")
-    is_guest = Column(Boolean, default=False)
-    avatar = Column(String(255))
-    birth_date = Column(Date)
+    user_id = Column(String(50), primary_key=True, default=lambda: str(uuid.uuid4()))
+    first_name = Column(String(50), nullable=True)
+    last_name = Column(String(50), nullable=True)
+    username = Column(String(50), unique=True, nullable=True)
+    email = Column(String(50), unique=True, nullable=True)
+    password_hash = Column(String(50), nullable=True)
+    phone = Column(String(20), nullable=True)
+    birth_date = Column(Date, nullable=True)
+    created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    avatar = Column(String(255), nullable=True)
     
     def serialize(self):
         return {
-            "id_user": self.id_user,
-            "avatar": self.avatar,
-            "firstname": self.first_name,
-            "lastname": self.last_name,
-            "username": self.username,
-            "email": self.email,
-            "password_hash": self.password_hash,
-            "phone": self.phone,
-            "create_at": self.created_at,
-            "is_guest": self.is_guest,
-            "birth_date": self.birth_date
-        }
+        'user_id': self.user_id,
+        'first_name': self.first_name,
+        'last_name': self.last_name,
+        'username': self.username,
+        'email': self.email,
+        "password_hash": self.password_hash,
+        'phone': self.phone,
+        'birth_date': self.birth_date,
+        'created_at': self.created_at,
+        'avatar': self.avatar
+    }
 
 class PaymentMethod(Base):
     __tablename__ = "payment_methods"
@@ -57,7 +54,7 @@ class Order(Base):
     __tablename__ = 'orders'
     
     id_order = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    id_user = Column(String(36), ForeignKey('users.id_user'))
+    id_user = Column(String(36), ForeignKey('users.user_id'))
     id_payment = Column(String(36), ForeignKey('payment_methods.id_payment'))
     total = Column(Numeric(10, 2), nullable=False)
     savings = Column(Numeric(10, 2), nullable=False)
