@@ -1,66 +1,132 @@
 from . import *
+import json
 from models.ProductModel import Product,Category
 
 
-product_route = Blueprint('product',__name__)
+product_route = Blueprint('products',__name__)
 
-class ProductsController():
+class ProductsController:
     
-    def get_products(db:Session, limit:int, last_product = None):
+    def getVideoGames(db:Session):
         
-        if last_product is None:
-            return jsonify({ "Error":"parameter last_id is requered"}),404
-        product = db.query(Product).filter(Product.id_product > last_product).limit(limit).all()
-        return jsonify([product.serialize() for product in product]),200
+        category_videogames = db.query(Category).filter(Category.name.ilike("%videogame%")).first()
+        if not category_videogames:
+            return jsonify({'message': 'Category Videogames not found in database'}), 404
+        
+        product = db.query(Product).filter(Product.category_id == category_videogames.category_id).all()
+        if not product: 
+            return jsonify({'message': 'Product not found'}), 404
+        
+        return jsonify([p.serialize() for p in product]),200
         
     
-    def getProductById(db:Session,id_product):
-        product = db.query(Product).filter(Product.id_product == id_product).first()
+    def getProductById(db:Session, product_id):
+        
+        product = db.query(Product).filter(Product.product_id == product_id).first()
+        if not product:
+            return jsonify({'message': 'Product not found'}), 404
+        
         return jsonify(product.serialize()),200
     
-    def create_product(db:Session, product):
-        db_product =Product(**product)
-        db.add(db_product)
-        db.commit()
-        # db.refresh(db_product)
-        return db_product
+    def getCoins(db:Session):
+        games = [] 
+        category = db.query(Category).filter(Category.name.ilike("%coins%")).first()
+        if not category:    
+            return jsonify({'message': 'Category coins not found in database'}), 404
+        coins = db.query(Product).join(Category).filter(Category.name == "coins").all()
+        
+        if not coins:
+            return jsonify({'message': 'Coins not found in database'}), 404
+        
+        for product in coins:
+                
+            description = product.prod_description
+        
+            if isinstance(description, str):
+                try:
+                    description = json.loads(description)
+                except json.JSONDecodeError:
+                    description = {}
 
+            game_name = description.get('game')
+            if game_name:
+                games.append({
+                    "game_name": game_name,
+                    "product_id": product.product_id,
+                    "image_url": product.image_url,
+                    "category_name": category.name
+                })
+        return jsonify(games), 200
 
-@product_route.route("/product", methods=['GET'])
-def getProducts():
-    last = request.args.get('last')
-    limit = request.args.get('limit', default=10)
-    category = request.args.get('category',default=None)
-    print(last, limit,category)
+    def getGamesWithCoins(db:Session):
+        coin_category = db.query(Category).filter(Category.name.ilike("%coins%")).first()
     
-    # products = ProductsController.get_products(db,limit)
-    # last_product_id = [product['id_product'] for product in products][-1]
+        if not coin_category:
+            return jsonify({"error": "Coin category not found"}), 404
+
+        products = db.query(Product).filter(Product.category_id == coin_category.category_id).all()
+
+        games_list = []
+        for product in products:
+            description = product.prod_description
+            if isinstance(description, str):
+                try:
+                    description = json.loads(description)
+                except json.JSONDecodeError:
+                    continue
+            
+            if 'game' in description:
+                game_data = {
+                    "game": description['game'],
+                    "image_url": product.image_url
+                }
+                games_list.append(game_data)
+
+        unique_games = []
+        seen = set()
+        for game in games_list:
+            key = (game["game"], game["image_url"])
+            if key not in seen:
+                seen.add(key)
+                unique_games.append(game)
+
+        unique_games_sorted = sorted(unique_games, key=lambda x: x["game"])
+
+        return jsonify(unique_games_sorted), 200
     
-    # print(last_product_id)
-    # return last_product_id
-    return ProductsController.get_products(db,limit,category)
+    def getCoinsForGame(db:Session, videogame_name:str):
+        coin_category = db.query(Category).filter(Category.name == "coins").first() 
+        if not coin_category:
+            return jsonify({"error": "Coin category not found"}), 404
+        
+        products = db.query(Product).filter(Product.category_id == coin_category.category_id).all()
 
-# @product_route.route("/product/games", methods=['GET'])
-# def getProducts():
-#     last = request.args.get('last')
-#     limit = request.args.get('limit', default=10)
-#     print(last, limit)
+        filtered_products = [product for product in products if product.prod_description.get('game') == videogame_name]
+        
+        if not filtered_products:
+            return jsonify({"error": f"No coins found for game {videogame_name}"}), 404
+
+        return jsonify([product.serialize() for product in filtered_products]), 200
     
-#     # products = ProductsController.get_products(db,limit)
-#     # last_product_id = [product['id_product'] for product in products][-1]
     
-#     # print(last_product_id)
-#     # return last_product_id
-#     return ProductsController.get_products_coins(db,limit)
+Pcontroller = ProductsController
 
-@product_route.route("/product", methods=['POST'])
-def createProducts():
-    ProductsController.create_product(db, request.json)
-    return jsonify({"message": 'Product Created'}),201
+@product_route.route("/products/videogames", methods=['GET'])
+def getVideoGamesEndPoint():
+    return Pcontroller.getVideoGames(db)
 
+@product_route.route("/products/<product_id>/", methods=['GET'])
+def getProductsByIdEndpoint(product_id):
+    return ProductsController.getProductById(db,product_id)
 
-@product_route.route("/product/<id_product>", methods=['GET'])
-def getProductsById(id_product):
-    return jsonify(ProductsController.getProductById(db,id_product)),200
+@product_route.route("/products/coins", methods=['GET'])
+def getCoinsEndPoint():
+    return Pcontroller.getCoins(db)
 
+@product_route.route("/products/coins/games-list", methods=['GET'])
+def get_games_with_coins():
+    return Pcontroller.getGamesWithCoins(db)
 
+@product_route.route("/products/coins/<videogame_name>", methods=['GET'])
+def get_coins_for_game(videogame_name:str):
+    return Pcontroller.getCoinsForGame(db,videogame_name)
