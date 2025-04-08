@@ -69,7 +69,7 @@ def register():
         db.refresh(user)
         
     except Exception as e:
-        db.roolback()
+        db.rollback()
         return jsonify({'error': str(e)}), 500
     
     return jsonify({'message': 'Registered successfully'}), 201
