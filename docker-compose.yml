@@ -5,21 +5,8 @@ services:
     container_name: "api_GamerVault"
     ports:
       - "5000:5000"
-    # depends_on:
-    #   - gamervaultdb
     networks: 
       - gamer-network
-
-  # gamervaultdb:
-  #   container_name: "database_GamerVault"
-  #   image: mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: gamerAdmin
-  #   ports:
-  #     - "3306:3306"
-  #   networks: 
-  #     - gamer-network
 
 networks:
   gamer-network:

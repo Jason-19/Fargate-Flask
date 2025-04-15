@@ -28,10 +28,13 @@ def getSecretManagerDB():
     
 
 db_credentials = getSecretManagerDB()
-DB_HOST = "cluster-gamer-vault-instance-1.c6r6ws4k4vwo.us-east-1.rds.amazonaws.com"
+DB_HOST = "localhost:8008"
+# DB_HOST = "cluster-gamer-vault-instance-1.c6r6ws4k4vwo.us-east-1.rds.amazonaws.com"
 DB_NAME = 'gamervaultlts'
-DB_USER = db_credentials["username"]
-DB_PASS = db_credentials["password"]
+DB_USER = 'admin'
+DB_PASS = ')rIRXLZ4bINQV[H(t5tm!PgMwX<Y'
+# DB_USER = db_credentials["username"]
+# DB_PASS = db_credentials["password"]
 
 
 DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
@@ -55,7 +58,7 @@ def get_db():
 def verify_db_connection():
     try:
         with engine.connect() as conn:
-            conn.execute(text("show databases;"))
+            conn.execute(text("SELECT 1"))
         log.info("Conexion exitosa")
         return True
     except Exception as e:

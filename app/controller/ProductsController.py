@@ -1,9 +1,8 @@
-from . import *
+from flask import jsonify
+from app.models.ProductModel import Product,Category
+from sqlalchemy.orm import Session
 import json
-from models.ProductModel import Product,Category
 
-
-product_route = Blueprint('products',__name__)
 
 class ProductsController:
     
@@ -108,25 +107,3 @@ class ProductsController:
 
         return jsonify([product.serialize() for product in filtered_products]), 200
     
-    
-Pcontroller = ProductsController
-
-@product_route.route("/products/videogames", methods=['GET'])
-def getVideoGamesEndPoint():
-    return Pcontroller.getVideoGames(db)
-
-@product_route.route("/products/<product_id>/", methods=['GET'])
-def getProductsByIdEndpoint(product_id):
-    return ProductsController.getProductById(db,product_id)
-
-@product_route.route("/products/coins", methods=['GET'])
-def getCoinsEndPoint():
-    return Pcontroller.getCoins(db)
-
-@product_route.route("/products/coins/games-list", methods=['GET'])
-def get_games_with_coins():
-    return Pcontroller.getGamesWithCoins(db)
-
-@product_route.route("/products/coins/<videogame_name>", methods=['GET'])
-def get_coins_for_game(videogame_name:str):
-    return Pcontroller.getCoinsForGame(db,videogame_name)
