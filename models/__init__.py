@@ -1,4 +1,4 @@
-from app.utils.db import Base, engine
+from utils.db import Base, engine
 from sqlalchemy import Column, Integer, String, Float, Date, Boolean, Enum, ForeignKey, TIMESTAMP, JSON, func, Numeric
 
 from sqlalchemy.orm import relationship

@@ -1,6 +1,6 @@
 from . import *
 from flask import jsonify
-from app.models.UserModel import User
+from models.UserModel import User
 from sqlalchemy.orm import Session
 
 class UsersController:

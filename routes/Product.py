@@ -1,6 +1,6 @@
 from . import *
-from app.utils.db import get_db
-from app.controller.ProductsController import ProductsController
+from utils.db import get_db
+from controller.ProductsController import ProductsController
 
 product_route = Blueprint('products',__name__)
 

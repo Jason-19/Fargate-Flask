@@ -1,8 +1,8 @@
 import jwt
-from app.models.UserModel import User
+from models.UserModel import User
 from flask import request,g, jsonify
 from datetime import date, datetime
-from app.utils.security import SecurityUserController
+from utils.security import SecurityUserController
 sc = SecurityUserController()
 
 

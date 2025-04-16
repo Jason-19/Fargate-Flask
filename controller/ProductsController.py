@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.models.ProductModel import Product,Category
+from models.ProductModel import Product,Category
 from sqlalchemy.orm import Session
 import json
 

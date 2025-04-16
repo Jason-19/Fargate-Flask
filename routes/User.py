@@ -1,7 +1,7 @@
 
 from . import *
-from app.models.UserModel import User
-from app.controller.Usercontroller import UsersController
+from models.UserModel import User
+from controller.Usercontroller import UsersController
 
 user_route = Blueprint('users',__name__) 
 

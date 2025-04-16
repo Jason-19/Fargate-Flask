@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from . import *
-from app.controller.AuthController import AuthController
-from app.utils.security import SecurityUserController
+from controller.AuthController import AuthController
+from utils.security import SecurityUserController
 
 auth_route = Blueprint('auth',__name__)
 
