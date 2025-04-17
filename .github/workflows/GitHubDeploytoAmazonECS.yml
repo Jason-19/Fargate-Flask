@@ -10,7 +10,7 @@ env:
     ECS_SERVICE: MainServiceGamerVaultGgeasy
     ECS_CLUSTER: main-cluster-gamer-vault-ggeasy
     ECS_TASK_DEFINITION: .aws/MainTaskGamerVaultGgeasy.json
-    CONTAINER_NAME: API-FLASK    
+    CONTAINER_NAME: API
                                             
 
 permissions:
