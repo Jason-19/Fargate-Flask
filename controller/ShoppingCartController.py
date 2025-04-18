@@ -14,7 +14,8 @@ class ShoppingCartController:
             cart = db.query(ShoppingCart).filter_by(user_id = user_id['user_id']).first()
             if not cart:
                 return jsonify({'error': 'User does not have a shopping cart'}), 500
-            return jsonify(cart.serialize()), 200
+            prod = cart.products
+            return jsonify(prod), 200
         except Exception as e:
             db.rollback()
             return jsonify({'error': str(e)}), 500 
