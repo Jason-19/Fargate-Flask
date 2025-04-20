@@ -72,4 +72,7 @@ class AuthController:
             g.db.rollback()
             return jsonify({'error': str(e)}), 500
         
-        return jsonify({'message': 'Registered successfully'}), 201
+        return jsonify({
+            'message': 'User registered successfully',
+            'user_id': user.user_id
+        }), 201
