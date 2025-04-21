@@ -51,7 +51,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 # Port Forwarding (Recomendado para RDS/Aurora)
 ``El comando tiene que ser todo en una sola linea``
-``verificar el puerto local de mi maquina si esta ocupado (ojo)``
+``verificar el puerto local de mi maquina si esta ocupado ``
 
 ```bash
 aws ssm start-session --target i-02ebe5b97d6f466c2 
