@@ -20,20 +20,20 @@ class ShoppingCartController:
             db.rollback()
             return jsonify({'error': str(e)}), 500 
     
-    def add_shoppingcart(db:Session):
-        user_id = request.get_json()
-        if not user_id['user_id']:
-            return jsonify({'error': 'No data provided'}), 400
-        try:
-            user = user_id['user_id']
-            newCart = ShoppingCart(**user_id)
-            db.add(newCart)
-            db.commit()
-            db.close()
-            return jsonify({"message":"Nuevo carrito registrado"}), 201
-        except Exception as e:
-            db.rollback()
-            return jsonify({'error': str(e)}), 500
+    # def add_shoppingcart(db:Session):
+    #     user_id = request.get_json()
+    #     if not user_id['user_id']:
+    #         return jsonify({'error': 'No data provided'}), 400
+    #     try:
+    #         user = user_id['user_id']
+    #         newCart = ShoppingCart(**user_id)
+    #         db.add(newCart)
+    #         db.commit()
+    #         db.close()
+    #         return jsonify({"message":"Nuevo carrito registrado"}), 201
+    #     except Exception as e:
+    #         db.rollback()
+    #         return jsonify({'error': str(e)}), 500
 
     def update_shoppingcart(db: Session):
         cart = request.get_json()
