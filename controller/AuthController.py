@@ -1,5 +1,7 @@
 import jwt
 from models.UserModel import User
+from models.ShoppingCartModel import ShoppingCart
+from models.WalletModel import Wallet
 from flask import request,g, jsonify
 from datetime import date, datetime
 from utils.security import SecurityUserController
@@ -68,8 +70,17 @@ class AuthController:
             g.db.commit()
             g.db.refresh(user)
             
+            newCart = ShoppingCart(user_id=user.user_id)
+            g.db.add(newCart)
+            g.db.commit()
+            
+            newWallet = Wallet(user_id=user.user_id)
+            g.db.add(newWallet)
+            g.db.commit()
+            
         except Exception as e:
             g.db.rollback()
             return jsonify({'error': str(e)}), 500
         
-        return jsonify({'message': 'Registered successfully'}), 201
+        return jsonify({
+            'message': 'User registered successfully'}), 201
