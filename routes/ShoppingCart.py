@@ -11,6 +11,6 @@ def get_shoppingcartEndpoint():
 def update_shoppingcartEndpoint():
     return sc.update_shoppingcart(g.db)
 
-@shoppingcart_route.route("/shoppingcart/add", methods=['POST'])
-def add_shoppingcartEndpoint():
-    return sc.add_shoppingcart(g.db)
+# @shoppingcart_route.route("/shoppingcart/add", methods=['POST'])
+# def add_shoppingcartEndpoint():
+#     return sc.add_shoppingcart(g.db)
